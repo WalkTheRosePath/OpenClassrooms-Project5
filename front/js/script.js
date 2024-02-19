@@ -1,25 +1,41 @@
-console.log("Testing...");
+//Get the existing element on the page where I can insert the cards 
+const sectionElement = document.getElementById("items");
 
-//TODO Get the array from the backend API
+//Get the array from the backend API
 fetch('http://localhost:3000/api/products')
     .then(data => {
         return data.json();
     })
-    .then(items => {
-        insertItems(items);
+    .then(products => {
+        console.log(products);
+        insertProducts(products);
     });
 
-//TODO Get the existing element on the page where I can insert the cards (look in section tag)
-const itemHolder = document.getElementById("items");
-
-//TODO Iterate over the array that I got from the backend
-function insertItems(items) {
-    for (let i = 0; i < items; i++){
-        const item = items[i];
-        console.log(item);
+//Iterate over the array that I got from the backend
+function insertProducts(products) {
+    for (let product of products) {
+        console.log(product);
+        //Insert product html on page
+        insertProduct(product);
     }
 }
-//      AND get the current element in the array
-//      AND create a new DOM element to be inserted into the homepage
-//      AND insert current element's info into the new DOM element
-//      AND append (child) new DOM element into existing section tag element on page
+
+/**
+ * Insert product html on page
+ * 
+ * @param {object} product - Product information
+ */
+function insertProduct(product) {
+    //Create a new DOM element to be inserted into the homepage
+    const productElement = document.createElement("a");
+    productElement.setAttribute("href", `./product.html?id=${product._id}`);
+    productElement.innerHTML =
+        `<article>
+          <img src="${product.imageUrl}" alt="${product.altTxt}">
+          <h3 class="productName">${product.name}</h3>
+          <p class="productDescription">${product.description}</p>
+        </article>`
+
+    //Append (child) new DOM element into existing section tag element on page
+    sectionElement.appendChild(productElement);
+}
