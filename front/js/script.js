@@ -1,7 +1,10 @@
-//Get the existing element on the page where I can insert the cards 
+//Get the existing section element on the page where the cards will be inserted
 const sectionElement = document.getElementById("items");
 
-//Get the array from the backend API
+/**
+ * Get the product array from the backend API
+ * 
+ */
 fetch('http://localhost:3000/api/products')
     .then(data => {
         return data.json();
@@ -11,7 +14,11 @@ fetch('http://localhost:3000/api/products')
         insertProducts(products);
     });
 
-//Iterate over the array that I got from the backend
+/**
+ * Iterate over product array from backend API
+ * 
+ * @param {object} products - Product array
+ */
 function insertProducts(products) {
     for (let product of products) {
         console.log(product);
@@ -36,6 +43,6 @@ function insertProduct(product) {
           <p class="productDescription">${product.description}</p>
         </article>`
 
-    //Append (child) new DOM element into existing section tag element on page
+    //Append as child the new DOM element into existing section element on homepage
     sectionElement.appendChild(productElement);
 }
