@@ -42,7 +42,6 @@ function insertProduct(product) {
           <h3 class="productName">${product.name}</h3>
           <p class="productDescription">${product.description}</p>
         </article>`
-
-    //Append as child the new DOM element into existing section element on homepage
+    //Append as a child the new DOM element into the existing section (parent) element on homepage
     sectionElement.appendChild(productElement);
 }
