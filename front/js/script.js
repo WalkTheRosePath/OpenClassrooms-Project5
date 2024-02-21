@@ -1,4 +1,4 @@
-//Get the existing section element on the page where the cards will be inserted
+//Get the existing section element on the page where the cards will later be inserted
 const sectionElement = document.getElementById("items");
 
 /**
