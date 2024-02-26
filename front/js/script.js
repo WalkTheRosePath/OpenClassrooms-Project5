@@ -1,11 +1,11 @@
-//Get the existing section element on the page where the cards will later be inserted
+//Get the existing <section> html element on the homepage where the product cards will be inserted
 const sectionElement = document.getElementById("items");
 
 /**
  * Get the product array from the backend API
  * 
  */
-fetch('http://localhost:3000/api/products')
+fetch(`http://localhost:3000/api/products`)
     .then(data => {
         return data.json();
     })
@@ -15,15 +15,14 @@ fetch('http://localhost:3000/api/products')
     });
 
 /**
- * Iterate over product array from backend API
+ * Iterate over product array that came from backend API
  * 
  * @param {object} products - Product array
  */
 function insertProducts(products) {
     for (let product of products) {
-        console.log(product);
-        //Insert product html on page
-        insertProduct(product);
+        console.log(product); //Display product info in console
+        insertProduct(product); //Insert product html onto page
     }
 }
 
@@ -34,14 +33,15 @@ function insertProducts(products) {
  */
 function insertProduct(product) {
     //Create a new DOM element to be inserted into the homepage
-    const productElement = document.createElement("a");
-    productElement.setAttribute("href", `./product.html?id=${product._id}`);
+    const productElement = document.createElement("a"); //Create a new anchor tag to hold the product info for each clickable card
+    productElement.setAttribute("href", `./product.html?id=${product._id}`); //Link the anchor tag to the product page (with selected product id attached)
     productElement.innerHTML =
         `<article>
           <img src="${product.imageUrl}" alt="${product.altTxt}">
           <h3 class="productName">${product.name}</h3>
           <p class="productDescription">${product.description}</p>
         </article>`
-    //Append as a child the new DOM element into the existing section (parent) element on homepage
+    //Append (as a child) the new DOM element into the existing (parent) section element on the homepage
     sectionElement.appendChild(productElement);
 }
+
