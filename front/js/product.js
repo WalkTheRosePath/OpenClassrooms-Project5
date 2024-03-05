@@ -39,16 +39,41 @@ function insertProductDetails(product) {
     });
 } 
 
-
-
-
 const button = document.getElementById("addToCart");
 
 button.addEventListener("click", () => {
     console.log("I'm clicked!")
-    //TODO Find out which one - id, color, qty
-    //TODO Get current cart from local storage
-    //TODO Add the product to the cart - if it's not already in there (id & color match, only increase in qty)
-    //TODO If it is found - increase the qty instead
-    //TODO Save updated cart back to local storage
-})
+    //Find out which product - id, color, quantity
+    const productId = id;
+    const selectedColor = document.getElementById("colors").value;
+    const selectedQuantity = parseInt(document.getElementById("quantity").value);
+
+    //Handle invalid input
+    if (!selectedColor || selectedQuantity <= 0) {
+        alert("Please select a color and quantity before adding to cart.");
+        return;
+    }
+
+    //Get current cart from local storage
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    
+    //Check if the product already exists in the cart
+    const existingProductIndex = cart.findIndex(item => item.productId === productId && item.color === selectedColor);
+
+    //If product and color is found, increase the quantity instead
+    if (existingProductIndex !== -1) {
+        cart[existingProductIndex].quantity += selectedQuantity;
+    } else {   //If product and color doesn't exist in cart, add new entry
+        cart.push({
+            productId: productId,
+            color: selectedColor,
+            quantity: selectedQuantity
+        });
+    }
+           
+    //Save updated cart back to local storage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    //Provide feedback to user
+    alert("Product added to cart.");
+});
