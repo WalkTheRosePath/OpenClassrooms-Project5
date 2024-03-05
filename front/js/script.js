@@ -22,7 +22,7 @@ fetch(`http://localhost:3000/api/products`)
 function insertProducts(products) {
     for (let product of products) {
         console.log(product); //Display product info in console
-        insertProduct(product); //Insert product html onto page
+        insertProduct(product); //Insert product HTML onto page
     }
 }
 
