@@ -7,7 +7,7 @@ const cartItemsContainer = document.getElementById("cart__items");
 //Clear any existing content in the cart container
 cartItemsContainer.innerHTML = "";
 
-//Loop through each item in the cart and create HTML elements for them
+//Go through each item in the cart and create HTML elements for them
 cart.forEach(item => {
     //Create elements for the cart item
     const cartItemElement = document.createElement("article");
@@ -41,6 +41,22 @@ cart.forEach(item => {
     cartItemsContainer.appendChild(cartItemElement);   
 })
 
+//Add event listener for quantity change
+cartItemsContainer.addEventListener("change", event => {
+    if (event.target.classList.contains("itemQuanity")) {
+        const productId = event.target.closest(".cart__item").dataset.id;
+        const color = event.target.closest(".cart__item").dataset.color;
+        const newQuantity = parseInt(event.target.value);
 
+        //Update cart data with new quanity
+        const cartIndex = cart.findIndex(item => item.productId === productId && item.color === color);
+        if (cartIndex !== -1) {
+            cart[cartIndex].quantity = newQuantity;
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
+    }
+});
+
+//TODO Add event listener for item deletion
 
 
