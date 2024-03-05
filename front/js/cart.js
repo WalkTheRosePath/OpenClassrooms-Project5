@@ -7,7 +7,7 @@ const cartItemsContainer = document.getElementById("cart__items");
 //Clear any existing content in the cart container
 cartItemsContainer.innerHTML = "";
 
-//Go through each item in the cart and create HTML elements for them
+//Go through items in the cart and create HTML elements for each
 cart.forEach(item => {
     //Create new DOM elements for the cart item
     const cartItemElement = document.createElement("article"); 
