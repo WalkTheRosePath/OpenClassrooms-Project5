@@ -1,3 +1,4 @@
+
 //Retrieve cart data from local storage
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -58,5 +59,39 @@ cartItemsContainer.addEventListener("change", event => {
 });
 
 //TODO Add event listener for item deletion
+
+
+//Get product ID and color from URL query parameters
+const urlParams = new URLSearchParams(window.location.search)
+const productId = urlParams.get("id");
+const selectedColor = document.getElementById("colors");
+const selectedQuantity = parseInt(document.getElementById("quantity").value);
+
+// //Fetch product details from backend API
+// fetch(`http://localhost:3000/api/products/${productId}`)
+//     .then(data => {
+//         return data.json();
+//     })
+//     .then(product => {
+//         console.log(product);
+//         insertProductDetails(product);
+
+//         //Add product to cart
+//         const itemToAddToCart = {
+//             productId: product._id,
+//             name: product.name,
+//             price: product.price,
+//             color: selectedColor,
+//             quantity: selectedQuantity,
+//             imageUrl: product.imageUrl,
+//             altTxt: product.altTxt
+//         }
+
+//         //Push the item to the cart array
+//         cart.push(itemToAddToCart);
+
+//         //Save updated cart to local storage
+//         localStorage.setItem("cart", JSON.stringify(cart));
+//     })
 
 

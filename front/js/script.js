@@ -1,4 +1,4 @@
-//Get the existing <section> html element on the homepage where the product cards will be inserted
+//Get the existing HTML element (<section>) on the homepage where the product cards will be inserted
 const sectionElement = document.getElementById("items");
 
 /**
