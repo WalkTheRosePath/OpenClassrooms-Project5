@@ -1,13 +1,6 @@
-
-
 const url = new URL(window.location.href);
 const id = url.searchParams.get("id");
-console.log(id);
 
-/**
- * Get the product from the backend API
- * 
- */
 fetch(`http://localhost:3000/api/products/${id}`)
     .then(data => {
         return data.json();
@@ -17,6 +10,11 @@ fetch(`http://localhost:3000/api/products/${id}`)
         insertProductDetails(product);
     });
 
+/**
+ * Insert product details in page
+ * 
+ * @param {object} product - product info
+ */
 function insertProductDetails(product) {
     const itemImage = document.querySelector('.item .item__img');
     const itemName = document.querySelector('.item #title');
@@ -40,3 +38,17 @@ function insertProductDetails(product) {
         itemColor.append(option);
     });
 } 
+
+
+
+
+const button = document.getElementById("addToCart");
+
+button.addEventListener("click", () => {
+    console.log("I'm clicked!")
+    //TODO Find out which one - id, color, qty
+    //TODO Get current cart from local storage
+    //TODO Add the product to the cart - if it's not already in there (id & color match, only increase in qty)
+    //TODO If it is found - increase the qty instead
+    //TODO Save updated cart back to local storage
+})
