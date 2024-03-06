@@ -75,7 +75,7 @@ cart.forEach(item => {
     cartItemsContainer.appendChild(cartItemElement);   
 })
 
-//Add event listener for quantity change
+//Use event listener for quantity change
 cartItemsContainer.addEventListener("change", event => {
     if (event.target.classList.contains("itemQuanity")) {
         const productId = event.target.closest(".cart__item").dataset.id;
@@ -91,5 +91,19 @@ cartItemsContainer.addEventListener("change", event => {
     }
 });
 
-//TODO Add event listener for item deletion
+//Use event listener for item deletion
+cartItemsContainer.addEventListener("click", event => {
+    if (event.target.classList.contains("deleteItem")) {
+        const productId = event.target.closest(".cart__item").dataset.id;
+        const color = event.target.closest(".cart__item").dataset.color;
+
+        //Remove item from cart data
+        const updatedCart = cart.filter(item => !(item.productId === productId && item.color === color));
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+        //Remove item from DOM
+        event.target.closest(".cart__item").remove();
+    }
+});
+
 
