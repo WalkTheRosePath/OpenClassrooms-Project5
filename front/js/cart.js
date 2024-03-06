@@ -106,6 +106,19 @@ cartItemsContainer.addEventListener("click", event => {
     }
 });
 
+//Function to display error message
+function displayErrorMessage(message) {
+    const errorMessageElement = document.getElementById("error-message");
+    errorMessageElement.textContent = message;
+    errorMessageElement.style.display = "block";
+}
+
+//Function to hide error message
+function hideErrorMessage() {
+    const errorMessageElement = document.getElementById("error-message");
+    errorMessageElement.style.display = "none";
+}
+
 //Use event listener for form submission
 orderForm.addEventListener("submit", event => {
     event.preventDefault(); //Prevent form submission
