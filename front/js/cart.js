@@ -161,10 +161,11 @@ orderForm.addEventListener("submit", event => {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ contact: contact, products: cart })
+        body: JSON.stringify({contact: contact, products: cart})
     })
         .then(response => response.json())
         .then(order => {
+            //Redirect user to confirmation page using order ID
             window.location.href = `confirmation.html?orderId=${order.orderId}`;
         });
 });
