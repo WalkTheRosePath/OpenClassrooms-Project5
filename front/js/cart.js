@@ -1,15 +1,7 @@
-//Get product ID and color from URL query parameters
-// const urlParams = new URLSearchParams(window.location.search)
-// const productId = urlParams.get("id");
-// const selectedColor = document.getElementById("colors");
-// const selectedQuantity = parseInt(document.getElementById("quantity").value);
-
 //Fetch product details from backend API
-function getProduct(productId) {
-    return fetch(`http://localhost:3000/api/products/${productId}`)
-        .then(data => {
-            return data.json();
-        })
+async function getProduct(productId) {
+    const data = await fetch(`http://localhost:3000/api/products/${productId}`);
+    return data.json();
 };
 
 //Get cart data from local storage
@@ -21,9 +13,13 @@ const cartItemsContainer = document.getElementById("cart__items");
 //Clear any existing content in the cart container
 cartItemsContainer.innerHTML = "";
 
+//Set default price and quantity to zero
+let totalPrice = 0;
+let totalQuantity = 0;
+
 //Go through items in the cart and create HTML elements for each
-cart.forEach(item => {
-    const product = getProduct(item.productId);
+cart.forEach(async item => {
+    const product = await getProduct(item.productId);
     console.log(product);
 
     //Create new DOM elements for the cart item
@@ -56,7 +52,13 @@ cart.forEach(item => {
 
     //Insert the cart item element into the cart page by appending to cart container
     cartItemsContainer.appendChild(cartItemElement);
-})
+
+    //Update total quantity and price to display
+    totalQuantity += item.quantity;
+    totalPrice += item.quantity * product.price;
+    document.getElementById("totalQuantity").innerText = totalQuantity;
+    document.getElementById("totalPrice").innerText = totalPrice;
+});
 
 //Use event listener for quantity change
 cartItemsContainer.addEventListener("change", event => {
