@@ -105,7 +105,7 @@ cartItemsContainer.addEventListener("click", event => {
         const color = event.target.closest(".cart__item").dataset.color;
 
         // Remove item from cart data
-        const updatedCart = cart.filter(item => !(item.productId === productId && item.color === color));
+        const updatedCart = latestCart.filter(item => !(item.productId === productId && item.color === color));
         localStorage.setItem("cart", JSON.stringify(updatedCart));
 
         // Remove item from DOM
