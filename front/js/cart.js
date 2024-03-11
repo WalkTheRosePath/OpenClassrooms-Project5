@@ -37,7 +37,7 @@ cart.forEach(async item => {
             <div class="cart__item__content__description">
                 <h2>${product.name}</h2>
                 <p>${item.color}</p>
-                <p>${product.price}</p>
+                <p>€${product.price}</p>
             </div>
                 <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
@@ -62,7 +62,9 @@ cart.forEach(async item => {
 
 //Use event listener for quantity change
 cartItemsContainer.addEventListener("change", event => {
-    if (event.target.classList.contains("itemQuanity")) {
+    if (event.target.classList.contains("itemQuantity")) {
+        console.log("changing");
+        // FIXME Get latest cart from local storage
         const productId = event.target.closest(".cart__item").dataset.id;
         const color = event.target.closest(".cart__item").dataset.color;
         const newQuantity = parseInt(event.target.value);
@@ -71,14 +73,18 @@ cartItemsContainer.addEventListener("change", event => {
         const cartIndex = cart.findIndex(item => item.productId === productId && item.color === color);
         if (cartIndex !== -1) {
             cart[cartIndex].quantity = newQuantity;
+            console.log(cart);
             localStorage.setItem("cart", JSON.stringify(cart));
         }
+
+        //FIXME Update page totals
     }
 });
 
 //Use event listener for item deletion
 cartItemsContainer.addEventListener("click", event => {
     if (event.target.classList.contains("deleteItem")) {
+        //FIXME Get latest cart from local storage 
         const productId = event.target.closest(".cart__item").dataset.id;
         const color = event.target.closest(".cart__item").dataset.color;
 
@@ -88,69 +94,85 @@ cartItemsContainer.addEventListener("click", event => {
 
         //Remove item from DOM
         event.target.closest(".cart__item").remove();
+
+        //FIXME Update page totals
     }
 });
 
+// TODO Add change event listeners to all form input fields and use regex to text their values
+// If their test fails, insert error message in its respective p tag
+// If their test succeeds, clear out the error message in its respective p tag
+
 //Function to display error message
-function displayErrorMessage(message) {
-    const errorMessageElement = document.getElementById("error-message");
+function displayErrorMessage(message, elementId) {
+    const errorMessageElement = document.getElementById(elementId);
     errorMessageElement.textContent = message;
     errorMessageElement.style.display = "block";
 }
 
 //Function to hide error message
-function hideErrorMessage() {
-    const errorMessageElement = document.getElementById("error-message");
+function hideErrorMessage(elementId) {
+    const errorMessageElement = document.getElementById(elementId);
     errorMessageElement.style.display = "none";
 }
 
 //Use event listener for form submission
-// orderForm.addEventListener("submit", event => {
-//     event.preventDefault(); //Prevent form submission
+const orderForm = document.getElementsByClassName("cart__order__form")[0];
+orderForm.addEventListener("submit", event => {
+    event.preventDefault(); //Prevent form submission
 
-//     //Get user input values from form
-//     const firstName = document.getElementById("firstName").value;
-//     const lastName = document.getElementById("lastName").value;
-//     const address = document.getElementById("address").value;
-//     const city = document.getElementById("city").value;
-//     const email = document.getElementById("email").value;
+    //Get user input values from form
+    const firstName = document.getElementById("firstName").value;
+    const lastName = document.getElementById("lastName").value;
+    const address = document.getElementById("address").value;
+    const city = document.getElementById("city").value;
+    const email = document.getElementById("email").value;
 
-//     //Basic validation for blank fields
-//     if (!firstName || !lastName || !address || !city || !email) {
-//         displayErrorMessage("Please fill out all fields.");
-//         return;
-//     }
+    //Basic validation for blank fields
+    if (!firstName || !lastName || !address || !city || !email) {
+        // displayErrorMessage("Please fill out all fields.");
+        return;
+    }
 
-//     //Validate email user input using regex
-//     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     if (!emailPattern.test(email)) {
-//         document.getElementById("emailErrorMsg").textContent = "Invalid email address";
-//         return;
-//     }
+    //Validate email user input using regex
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        displayErrorMessage("Invalid email address", "emailErrorMsg");
+        return;
+    }
 
-//     //If all validation pass, hide error message and move to order confirmation
-//     hideErrorMessage();
+    //If all validation pass, hide error message and move to order confirmation
+    hideErrorMessage("emailErrorMsg");
 
-//     //Create a contact object
-//     const contact = {
-//         firstName: firstName,
-//         lastName: lastName,
-//         address: address,
-//         city: city,
-//         email: email
-//     };
+    //Create a contact object
+    const contact = {
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+        city: city,
+        email: email
+    };
 
-//     //Send order data to the API using a POST request
-//     fetch("http://localhost:3000/api/products/order", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify({contact: contact, products: cart})
-//     })
-//         .then(response => response.json())
-//         .then(order => {
-//             //Redirect user to confirmation page using order ID
-//             window.location.href = `confirmation.html?orderId=${order.orderId}`;
-//         });
-// });
+    // FIXME Declare products variable and set its value to an array of product ID strings
+    // Get product IDs from cart (Use the map method on the cart array)
+    const products = [];
+
+    const order = {
+        contact,
+        products
+    }
+
+    //Send order data to the API using a POST request
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(order)
+    })
+        .then(response => response.json())
+        .then(order => {
+            //Redirect user to confirmation page using order ID
+            window.location.href = `confirmation.html?orderId=${order.orderId}`;
+        });
+});
