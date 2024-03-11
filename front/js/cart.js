@@ -72,32 +72,35 @@ cartItemsContainer.addEventListener("change", event => {
         const color = event.target.closest(".cart__item").dataset.color;
         const newQuantity = parseInt(event.target.value);
 
-        // Update cart data with new quantity
-        const cartIndex = cart.findIndex(item => item.productId === productId && item.color === color);
+        // Update the quantity of the corresponding item in the latest cart
+        const cartIndex = latestCart.findIndex(item => item.productId === productId && item.color === color);
         if (cartIndex !== -1) {
-            cart[cartIndex].quantity = newQuantity;
-            console.log(cart);
+            latestCart[cartIndex].quantity = newQuantity;
+            console.log(latestCart);
+
+            // Update local storage with the updated cart data
             localStorage.setItem("cart", JSON.stringify(cart));
+
+            // Recalculate total quantity and total price based on updated cart
+            let updatedTotalQuantity = 0;
+            let updatedTotalPrice = 0;
+            latestCart.forEach(item => {
+                updatedTotalQuantity += item.quantity;
+                updatedTotalPrice += item.quantity * item.price;
+            });
+
+            // Update the total quantity and price elements on the page
+            document.getElementById("totalQuantity").innerText = updatedTotalQuantity;
+            document.getElementById("totalPrice").innerText = updatedTotalPrice;
         }
-
-        // Calculate total quantity and total price based on updated cart
-        let updatedTotalQuantity = 0;
-        let updatedTotalPrice = 0;
-        cart.forEach(item => {
-            updatedTotalQuantity += item.quantity;
-            updatedTotalPrice += item.quantity * item.price;
-        });
-
-        // Update the total quantity and price elements on the page
-        document.getElementById("totalQuantity").innerText = updatedTotalQuantity;
-        document.getElementById("totalPrice").innerText = updatedTotalPrice;
     }
 });
 
 // Use event listener for item deletion
 cartItemsContainer.addEventListener("click", event => {
     if (event.target.classList.contains("deleteItem")) {
-        //FIXME Get latest cart from local storage 
+        //Get latest cart from local storage 
+        const latestCart = JSON.parse(localStorage.getItem("cart")) || [];
         const productId = event.target.closest(".cart__item").dataset.id;
         const color = event.target.closest(".cart__item").dataset.color;
 
@@ -108,7 +111,17 @@ cartItemsContainer.addEventListener("click", event => {
         // Remove item from DOM
         event.target.closest(".cart__item").remove();
 
-        // FIXME Update page totals
+        // Recalculate total quantity and total price based on updated cart
+        let updatedTotalQuantity = 0;
+        let updatedTotalPrice = 0;
+        updatedCart.forEach(item => {
+            updatedTotalQuantity += item.quantity;
+            updatedTotalPrice += item.quantity * item.price;
+        });
+
+        // Update the total quantity and price elements on the page
+        document.getElementById("totalQuantity").innerText = updatedTotalQuantity;
+        document.getElementById("totalPrice").innerText = updatedTotalPrice;
     }
 });
 
