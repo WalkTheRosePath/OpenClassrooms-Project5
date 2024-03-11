@@ -65,7 +65,7 @@ cartItemsContainer.addEventListener("change", event => {
     if (event.target.classList.contains("itemQuantity")) {
         console.log("changing");
         // Get latest cart from local storage
-
+        const latestCart = JSON.parse(localStorage.getItem("cart")) || [];
 
         // Extract necessary info from the event and the DOM
         const productId = event.target.closest(".cart__item").dataset.id;
