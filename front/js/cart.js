@@ -125,80 +125,86 @@ cartItemsContainer.addEventListener("click", event => {
     }
 });
 
-// TODO Add change event listeners to all form input fields and use regex to text their values
-// If their test fails, insert error message in its respective p tag
-// If their test succeeds, clear out the error message in its respective p tag
-
-// Function to display error message
-function displayErrorMessage(message, elementId) {
-    const errorMessageElement = document.getElementById(elementId);
-    errorMessageElement.textContent = message;
-    errorMessageElement.style.display = "block";
-}
-
-// Function to hide error message
-function hideErrorMessage(elementId) {
-    const errorMessageElement = document.getElementById(elementId);
-    errorMessageElement.style.display = "none";
-}
-
-// Use event listener for form submission
-const orderForm = document.getElementsByClassName("cart__order__form")[0];
-orderForm.addEventListener("submit", event => {
-    event.preventDefault(); //Prevent form submission
-
-    // Get user input values from form
-    const firstName = document.getElementById("firstName").value;
-    const lastName = document.getElementById("lastName").value;
-    const address = document.getElementById("address").value;
-    const city = document.getElementById("city").value;
-    const email = document.getElementById("email").value;
-
-    // Basic validation for blank fields
-    if (!firstName || !lastName || !address || !city || !email) {
-        // displayErrorMessage("Please fill out all fields.");
-        return;
+// Create object to map input IDs to their validation patterns and to error message IDs
+const inputValidationRules = {
+    firstName: {
+        pattern: /^[A-Za-z]+$/,
+        errorMessageId: "firstNameErrorMsg"
+    },
+    lastName: {
+        pattern: /^[A-Za-z]+$/,
+        errorMessageId: "lastNameErrorMsg"
+    },
+    address: {
+        pattern: /.*/,
+        errorMessageId: "addressErrorMsg"
+    },
+    city: {
+        pattern: /^[A-Za-z\s-]+$/,
+        errorMessageId: "cityErrorMsg"
+    },
+    email: {
+        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        errorMessageId: "emailErrorMsg"
     }
+};
 
-    // Validate email user input using regex
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-        displayErrorMessage("Invalid email address", "emailErrorMsg");
-        return;
-    }
+// Function to add change event listeners to form input fields
+function addChangeListeners() {
+    const formInputs = document.querySelectorAll(".cart__order__form input");
+    formInputs.forEach(input => {
+        input.addEventListener("change", event => {
+            const inputValue = event.target.value.trim(); // Trim whitespace from string
+            const inputId = event.target.id;
+            const errorMessageId = inputValidationRules[inputId].errorMessageId;
+            const errorMessageElement = document.getElementById(errorMessageId);
 
-    // If all validation pass, hide error message and move to order confirmation
-    hideErrorMessage("emailErrorMsg");
+            // Get the validation pattern for the input ID
+            const { pattern } = inputValidationRules[inputId];
 
-    // Create a contact object
-    const contact = {
-        firstName: firstName,
-        lastName: lastName,
-        address: address,
-        city: city,
-        email: email
-    };
-
-    // FIXME Declare products variable and set its value to an array of product ID strings
-    // Get product IDs from cart (Use the map method on the cart array)
-    const products = [];
-
-    const order = {
-        contact,
-        products
-    }
-
-    // Send order data to the API using a POST request
-    fetch("http://localhost:3000/api/products/order", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(order)
-    })
-        .then(response => response.json())
-        .then(order => {
-            // Redirect user to confirmation page using order ID
-            window.location.href = `confirmation.html?orderId=${order.orderId}`;
+            // Validate input based on the pattern
+            if (!pattern.test(inputValue)) {
+                errorMessageElement.textContent = `Invalid ${inputId}`;
+                errorMessageElement.style.display = "block";
+            } else {
+                errorMessageElement.textContent = "";
+                errorMessageElement.style.display = "none";
+            }
         });
-});
+    });
+}
+
+// Call the function to add change event listeners for the form
+addChangeListeners();
+
+// Create a contact object from the form input
+const contact = {
+    firstName: firstName,
+    lastName: lastName,
+    address: address,
+    city: city,
+    email: email
+};
+
+// FIXME Declare products variable and set its value to an array of product ID strings
+// Get product IDs from cart (Use the map method on the cart array)
+const products = [];
+
+const order = {
+    contact,
+    products
+}
+
+// Send order data to the API using a POST request
+fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(order)
+})
+    .then(response => response.json())
+    .then(order => {
+        // Redirect user to confirmation page using order ID
+        window.location.href = `confirmation.html?orderId=${order.orderId}`;
+    });
