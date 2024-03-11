@@ -79,7 +79,7 @@ cartItemsContainer.addEventListener("change", event => {
             console.log(latestCart);
 
             // Update local storage with the updated cart data
-            localStorage.setItem("cart", JSON.stringify(cart));
+            localStorage.setItem("cart", JSON.stringify(latestCart));
 
             // Recalculate total quantity and total price based on updated cart
             let updatedTotalQuantity = 0;
@@ -125,7 +125,7 @@ cartItemsContainer.addEventListener("click", event => {
     }
 });
 
-// Create object to map input IDs to their validation patterns and to error message IDs
+// Create object to map form input IDs to their validation patterns and to error message IDs
 const inputValidationRules = {
     firstName: {
         pattern: /^[A-Za-z]+$/,
@@ -177,34 +177,53 @@ function addChangeListeners() {
 // Call the function to add change event listeners for the form
 addChangeListeners();
 
-// Create a contact object from the form input
-const contact = {
-    firstName: firstName,
-    lastName: lastName,
-    address: address,
-    city: city,
-    email: email
-};
+// Use event listener for form submission
+const orderForm = document.getElementsByClassName("cart__order__form")[0];
+orderForm.addEventListener("submit", event => {
+    event.preventDefault(); // Prevent form submission
 
-// FIXME Declare products variable and set its value to an array of product ID strings
-// Get product IDs from cart (Use the map method on the cart array)
-const products = [];
+    // Get user input values from form
+    const firstName = document.getElementById("firstName").value;
+    const lastName = document.getElementById("lastName").value;
+    const address = document.getElementById("address").value;
+    const city = document.getElementById("city").value;
+    const email = document.getElementById("email").value;
 
-const order = {
-    contact,
-    products
-}
+    // Perform basic validation for blank fields
+    if (!firstName || !lastName || !address || !city || !email) {
+        displayErrorMessage("Please fill out all fields.");
+        return;
+    }
 
-// Send order data to the API using a POST request
-fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(order)
+    // Create a contact object from the form input
+    const contact = {
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+        city: city,
+        email: email
+    };
+
+    // Declare products variable and set its value to an array of product ID strings
+    // Get product IDs from cart, using the map method on the cart array
+    const products = cart.map(item => item.productId);
+
+    const order = {
+        contact,
+        products
+    }
+
+    // Send order data to the API using a POST request
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(order)
+    })
+        .then(response => response.json())
+        .then(order => {
+            // Redirect user to confirmation page using order ID
+            window.location.href = `confirmation.html?orderId=${order.orderId}`;
+        });
 })
-    .then(response => response.json())
-    .then(order => {
-        // Redirect user to confirmation page using order ID
-        window.location.href = `confirmation.html?orderId=${order.orderId}`;
-    });
