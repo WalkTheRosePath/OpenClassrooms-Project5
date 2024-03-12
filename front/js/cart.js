@@ -13,7 +13,7 @@ const cartItemsContainer = document.getElementById("cart__items");
 // Clear any existing content in the cart container
 cartItemsContainer.innerHTML = "";
 
-// Set default price and quantity to zero
+// Set defaults of total price and total quantity to zero
 let totalPrice = 0;
 let totalQuantity = 0;
 
@@ -60,13 +60,13 @@ cart.forEach(async item => {
     document.getElementById("totalPrice").innerText = totalPrice;
 });
 
-// Use event listener for quantity change
+// Use event listener for item quantity change
 cartItemsContainer.addEventListener("change", event => {
     if (event.target.classList.contains("itemQuantity")) {
-        console.log("changing");
+        console.log("Changing quantity...");
         // Get latest cart from local storage
         const latestCart = JSON.parse(localStorage.getItem("cart")) || [];
-
+        
         // Extract necessary info from the event and the DOM
         const productId = event.target.closest(".cart__item").dataset.id;
         const color = event.target.closest(".cart__item").dataset.color;
@@ -87,6 +87,8 @@ cartItemsContainer.addEventListener("change", event => {
             latestCart.forEach(item => {
                 updatedTotalQuantity += item.quantity;
                 updatedTotalPrice += item.quantity * item.price;
+                // console.log(typeof item.quantity);
+                // console.log(typeof item.price);
             });
 
             // Update the total quantity and price elements on the page
@@ -117,7 +119,7 @@ cartItemsContainer.addEventListener("click", event => {
         updatedCart.forEach(item => {
             updatedTotalQuantity += item.quantity;
             updatedTotalPrice += item.quantity * item.price;
-        });
+            });
 
         // Update the total quantity and price elements on the page
         document.getElementById("totalQuantity").innerText = updatedTotalQuantity;
@@ -226,4 +228,7 @@ orderForm.addEventListener("submit", event => {
             // Redirect user to confirmation page using order ID
             window.location.href = `confirmation.html?orderId=${order.orderId}`;
         });
+    
+    // TODO Clear any existing content in the cart container
+
 })
