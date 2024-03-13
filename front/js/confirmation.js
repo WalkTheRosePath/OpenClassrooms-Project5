@@ -5,6 +5,3 @@ const orderId = urlParams.get("orderId");
 // Display order ID on confirmation page
 const orderIdElement = document.getElementById("orderId");
 orderIdElement.textContent = orderId;
-
-// Remove cart info from local storage
-localStorage.removeItem("cart");

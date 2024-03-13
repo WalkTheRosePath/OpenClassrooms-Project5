@@ -17,7 +17,10 @@ cartItemsContainer.innerHTML = "";
 let totalPrice = 0;
 let totalQuantity = 0;
 
-// Go through items in the cart and create HTML elements for each
+/**
+ * Iterate through items in the cart and create HTML elements for each
+ * 
+ */
 cart.forEach(async item => {
     const product = await getProduct(item.productId);
     console.log(product);
@@ -60,7 +63,10 @@ cart.forEach(async item => {
     document.getElementById("totalPrice").innerText = totalPrice;
 });
 
-// Use event listener for item quantity change
+/**
+ * Use event listener for item quantity change
+ * 
+ */
 cartItemsContainer.addEventListener("change", event => {
     if (event.target.classList.contains("itemQuantity")) {
         console.log("Changing quantity...");
@@ -98,7 +104,10 @@ cartItemsContainer.addEventListener("change", event => {
     }
 });
 
-// Use event listener for item deletion
+/**
+ * Use event listener for item deletion
+ * 
+ */
 cartItemsContainer.addEventListener("click", event => {
     if (event.target.classList.contains("deleteItem")) {
         //Get latest cart from local storage 
@@ -151,7 +160,10 @@ const inputValidationRules = {
     }
 };
 
-// Function to add change event listeners to form input fields
+/**
+ * Function to add change event listeners to form input fields
+ * 
+ */
 function addChangeListeners() {
     const formInputs = document.querySelectorAll(".cart__order__form input");
     formInputs.forEach(input => {
@@ -179,7 +191,10 @@ function addChangeListeners() {
 // Call the function to add change event listeners for the form
 addChangeListeners();
 
-// Use event listener for form submission
+/**
+ * Use event listener for form submission
+ * 
+ */
 const orderForm = document.getElementsByClassName("cart__order__form")[0];
 orderForm.addEventListener("submit", event => {
     event.preventDefault(); // Prevent form submission
@@ -229,6 +244,6 @@ orderForm.addEventListener("submit", event => {
             window.location.href = `confirmation.html?orderId=${order.orderId}`;
         });
     
-    // TODO Clear any existing content in the cart container
-
+    // Clear any existing content in the cart container
+    localStorage.removeItem("cart");
 })
