@@ -109,7 +109,7 @@ cartItemsContainer.addEventListener("change", event => {
                 const price = searchCache(productId).price;
                 updatedTotalPrice += item.quantity * price; // Check here for bug
             });
-            
+
             // Update the total quantity and price elements on the page
             document.getElementById("totalQuantity").innerText = updatedTotalQuantity;
             console.log(updatedTotalPrice);
@@ -175,6 +175,11 @@ const inputValidationRules = {
     }
 };
 
+const camelToFlat = (camel) => {
+    const camelCase = camel.replace(/([a-z])([A-Z])/g, '$1 $2')
+    return camelCase
+}
+
 /**
  * Function to add change event listeners to form input fields
  * 
@@ -193,7 +198,7 @@ function addChangeListeners() {
 
             // Validate input based on the pattern
             if (!pattern.test(inputValue)) {
-                errorMessageElement.textContent = `Invalid ${inputId}`;
+                errorMessageElement.textContent = `Invalid ${camelToFlat(inputId).toLowerCase()}`;
                 errorMessageElement.style.display = "block";
             } else {
                 errorMessageElement.textContent = "";
