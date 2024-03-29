@@ -1,4 +1,4 @@
-// Use URL to get product id from home page
+// Use URL to get product ID
 const url = new URL(window.location.href);
 const id = url.searchParams.get("id");
 
@@ -33,19 +33,20 @@ function insertProductDetails(product) {
     itemPrice.textContent = product.price;
     itemDescription.textContent = product.description;
     
+    // Populate dropdown list for color choices
     product.colors.forEach(color => {
         console.log(color);
         const option = document.createElement("option");
         option.textContent = color;
         itemColor.append(option);
     });
-} 
+}
 
-const button = document.getElementById("addToCart");
 /**
- * Use event listener for button click
+ * Use event listener for button click to add product to cart
  * 
  */
+const button = document.getElementById("addToCart");
 button.addEventListener("click", () => {
     console.log("I'm clicked!")
     //Find out which product - id, color, quantity
@@ -69,7 +70,7 @@ button.addEventListener("click", () => {
     if (existingProductIndex !== -1) {
         cart[existingProductIndex].quantity += selectedQuantity;
     } else {   //If product and color doesn't exist in cart, add new entry
-        cart.push({
+        cart.push({   //(Note: In future consider updating array with .map method instead of .push for better use with frameworks)
             productId: productId,
             color: selectedColor,
             quantity: selectedQuantity
