@@ -1,3 +1,11 @@
+// Check if the cart is empty when the page loads
+window.addEventListener("DOMContentLoaded", () => {
+    if (cart.length === 0) {
+        // If the cart is empty, display an error message
+        displayErrorMessage("Please add products to the cart before viewing.")
+    }
+});
+
 // Fetch product details from backend API
 async function getProduct(productId) {
     const data = await fetch(`http://localhost:3000/api/products/${productId}`);
