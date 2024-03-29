@@ -27,7 +27,7 @@ function searchCache(productId) {
         }
     });
     return foundProduct;
-}
+};
 
 /**
  * Iterate through items in the cart and create HTML elements for each
@@ -71,7 +71,7 @@ cart.forEach(async item => {
 
     // Update total quantity and price to display
     totalQuantity += item.quantity;
-    totalPrice += item.quantity * product.price;
+    totalPrice += item.quantity * searchCache.price;
     document.getElementById("totalQuantity").innerText = totalQuantity;
     document.getElementById("totalPrice").innerText = totalPrice;
 });
@@ -142,7 +142,8 @@ cartItemsContainer.addEventListener("click", event => {
         let updatedTotalPrice = 0;
         updatedCart.forEach(item => {
             updatedTotalQuantity += item.quantity;
-            updatedTotalPrice += item.quantity * item.price;
+            const price = searchCache(productId).price;
+            updatedTotalPrice += item.quantity * price;
         });
 
         // Update the total quantity and price elements on the page
