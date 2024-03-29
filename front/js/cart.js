@@ -28,6 +28,7 @@ function searchCache(productId) {
     });
     return foundProduct;
 };
+console.log(productCache);
 
 /**
  * Iterate through items in the cart and create HTML elements for each
@@ -71,7 +72,7 @@ cart.forEach(async item => {
 
     // Update total quantity and price to display
     totalQuantity += item.quantity;
-    totalPrice += item.quantity * searchCache.price;
+    totalPrice += item.quantity * searchCache(item.productId).price;
     document.getElementById("totalQuantity").innerText = totalQuantity;
     document.getElementById("totalPrice").innerText = totalPrice;
 });
@@ -82,7 +83,7 @@ cart.forEach(async item => {
  */
 cartItemsContainer.addEventListener("change", event => {
     if (event.target.classList.contains("itemQuantity")) {
-        console.log("Changing quantity...");
+
         // Get latest cart from local storage
         const latestCart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -104,16 +105,17 @@ cartItemsContainer.addEventListener("change", event => {
             // Recalculate total quantity and total price based on updated cart
             let updatedTotalQuantity = 0;
             let updatedTotalPrice = 0;
+
             latestCart.forEach(item => {
                 updatedTotalQuantity += item.quantity;
-                const price = searchCache(productId).price;
-                updatedTotalPrice += item.quantity * price; // Check here for bug
+                updatedTotalPrice += item.quantity * searchCache(item.productId).price;
             });
+
+            document.getElementById("totalQuantity").innerText = totalQuantity;
+            document.getElementById("totalPrice").innerText = totalPrice;
 
             // Update the total quantity and price elements on the page
             document.getElementById("totalQuantity").innerText = updatedTotalQuantity;
-            console.log(updatedTotalPrice);
-
             document.getElementById("totalPrice").innerText = updatedTotalPrice;
         }
     }
