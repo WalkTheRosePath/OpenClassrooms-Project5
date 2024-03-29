@@ -1,6 +1,8 @@
+// Use URL to get product id from home page
 const url = new URL(window.location.href);
 const id = url.searchParams.get("id");
 
+// Use fetch to get product info from backend API
 fetch(`http://localhost:3000/api/products/${id}`)
     .then(data => {
         return data.json();
@@ -40,7 +42,10 @@ function insertProductDetails(product) {
 } 
 
 const button = document.getElementById("addToCart");
-
+/**
+ * Use event listener for button click
+ * 
+ */
 button.addEventListener("click", () => {
     console.log("I'm clicked!")
     //Find out which product - id, color, quantity
