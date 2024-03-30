@@ -1,4 +1,4 @@
-// Fetch product details from backend API
+// Get product details from the backend API
 async function getProduct(productId) {
     const data = await fetch(`http://localhost:3000/api/products/${productId}`);
     return data.json();
@@ -17,7 +17,7 @@ cartItemsContainer.innerHTML = "";
 let totalPrice = 0;
 let totalQuantity = 0;
 
-// Initialize product cache 
+// Initialize product cache (to better access "price" since it can't be held in local storage)
 const productCache = new Set();
 function searchCache(productId) {
     let foundProduct = null;
@@ -28,7 +28,6 @@ function searchCache(productId) {
     });
     return foundProduct;
 };
-console.log(productCache);
 
 /**
  * Iterate through items in the cart and create HTML elements for each
@@ -45,7 +44,7 @@ cart.forEach(async item => {
     cartItemElement.dataset.id = item.productId;
     cartItemElement.dataset.color = item.color;
 
-    // Build dynamic HTML for the cart item
+    // Build dynamic HTML for the cart item using a template
     cartItemElement.innerHTML =
         `<div class="cart__item__img">
             <img src="${product.imageUrl}" alt="${product.altTxt}">
